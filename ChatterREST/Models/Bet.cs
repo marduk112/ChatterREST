@@ -41,8 +41,7 @@ namespace ChatterREST.Models
             }
             set { _result = value; }
         }
-
-        [Required]
+     
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
