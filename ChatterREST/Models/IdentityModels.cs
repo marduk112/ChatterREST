@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web.Routing;
 using Microsoft.AspNet.Identity;
@@ -10,6 +12,8 @@ namespace ChatterREST.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        [Required, DefaultValue(1000)]
+        public int Point { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -30,5 +34,13 @@ namespace ChatterREST.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<ChatterREST.Models.Bet> Bets { get; set; }
+
+        public System.Data.Entity.DbSet<ChatterREST.Models.ApplicationUser> ApplicationUsers { get; set; }
+
+        public System.Data.Entity.DbSet<ChatterREST.Models.BetComment> BetComments { get; set; }
+
+        public System.Data.Entity.DbSet<ChatterREST.Models.BetParticipant> BetParticipants { get; set; }
     }
 }
