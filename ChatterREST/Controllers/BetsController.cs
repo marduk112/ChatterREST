@@ -18,9 +18,20 @@ namespace ChatterREST.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/Bets
-        public IQueryable<Bet> GetBets()
+        public IQueryable<BetDTO> GetBets()
         {
-            return db.Bets;
+            return from bet in db.Bets
+                   select new BetDTO
+                   {
+                       DateCreated = bet.DateCreated,
+                       Description = bet.Description,
+                       EndDate = bet.EndDate,
+                       Id = bet.Id,
+                       RequiredPoints = bet.RequiredPoints,
+                       Result = bet.Result,
+                       Title = bet.Title,
+                       UserName = bet.ApplicationUser.UserName,
+                   };
         }
 
         // GET: api/Bets/5

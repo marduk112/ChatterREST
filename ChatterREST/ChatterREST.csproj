@@ -234,6 +234,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
     <Compile Include="Models\BetComment.cs" />
+    <Compile Include="Models\BetDTO.cs" />
     <Compile Include="Models\BetParticipant.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
