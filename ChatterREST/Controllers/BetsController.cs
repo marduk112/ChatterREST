@@ -36,16 +36,49 @@ namespace ChatterREST.Controllers
         }
 
         // GET: api/Bets/5
-        [ResponseType(typeof(Bet))]
+        [ResponseType(typeof(ICollection<BetDTO>))]
         public async Task<IHttpActionResult> GetBet(int id)
         {
+            ICollection<BetDTO> betList;
             Bet bet = await db.Bets.FindAsync(id);
             if (bet == null)
             {
                 return NotFound();
             }
-
-            return Ok(bet);
+            if (id != 0)
+            {
+                betList = new List<BetDTO>();
+                var temp = new BetDTO
+                {
+                       DateCreated = bet.DateCreated,
+                       Description = bet.Description,
+                       EndDate = bet.EndDate,
+                       Id = bet.Id,
+                       RequiredPoints = bet.RequiredPoints,
+                       Result = bet.Result,
+                       Title = bet.Title,
+                       UserName = bet.ApplicationUser.UserName,
+                   };
+                betList.Add(temp);
+            }
+            else
+            {
+                var userBets = from b in db.Bets
+                    where b.ApplicationUserId == User.Identity.GetUserId()
+                    select new BetDTO
+                    {
+                        DateCreated = b.DateCreated,
+                        Description = b.Description,
+                        EndDate = b.EndDate,
+                        Id = b.Id,
+                        RequiredPoints = b.RequiredPoints,
+                        Result = b.Result,
+                        Title = b.Title,
+                        UserName = b.ApplicationUser.UserName,
+                    };
+                betList = userBets.ToList();
+            }
+            return Ok(betList);
         }
 
         // PUT: api/Bets/5
