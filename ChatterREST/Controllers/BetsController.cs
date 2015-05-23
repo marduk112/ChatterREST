@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ChatterREST.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ChatterREST.Controllers
 {
@@ -91,6 +92,7 @@ namespace ChatterREST.Controllers
                 return BadRequest(ModelState);
             }
 
+            bet.ApplicationUserId = User.Identity.GetUserId();
             db.Bets.Add(bet);
             await db.SaveChangesAsync();
 

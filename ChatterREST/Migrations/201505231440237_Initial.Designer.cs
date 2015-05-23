@@ -13,7 +13,7 @@ namespace ChatterREST.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201504301710358_Initial"; }
+            get { return "201505231440237_Initial"; }
         }
         
         string IMigrationMetadata.Source
