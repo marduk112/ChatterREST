@@ -38,39 +38,12 @@ namespace ChatterREST.Controllers
         }
 
         // GET: api/Bets/5
-        [ResponseType(typeof(ICollection<BetDTO>))]
+        [ResponseType(typeof(BetDTO))]
         public async Task<IHttpActionResult> GetBet(int id)
         {
-            ICollection<BetDTO> betList;
             Bet bet = await db.Bets.FindAsync(id);
-            if (bet == null)
-            {
-                return NotFound();
-            }
-            if (id != 0)
-            {
-                Mapper.CreateMap<Bet, BetDTO>();
-                var dto = Mapper.Map<BetDTO>(bet);
-                betList = new List<BetDTO> {dto};
-            }
-            else
-            {
-                var userBets = from b in db.Bets
-                               where b.ApplicationUserId == User.Identity.GetUserId()
-                               select new BetDTO
-                               {
-                                   DateCreated = b.DateCreated,
-                                   Description = b.Description,
-                                   EndDate = b.EndDate,
-                                   Id = b.Id,
-                                   RequiredPoints = b.RequiredPoints,
-                                   Result = b.Result,
-                                   Title = b.Title,
-                                   UserName = b.ApplicationUser.UserName,
-                               };
-                betList = userBets.ToList();
-            }
-            return Ok(betList);
+            Mapper.CreateMap<Bet, BetDTO>();
+            return Ok(Mapper.Map<BetDTO>(bet));
         }
 
         // PUT: api/Bets/5
