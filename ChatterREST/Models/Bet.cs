@@ -20,7 +20,7 @@ namespace ChatterREST.Models
             {
                 return _dateCreated.HasValue
                    ? _dateCreated.Value
-                   : DateTimeOffset.UtcNow.UtcDateTime;
+                   : DateTimeOffset.UtcNow.DateTime;
             }
 
             set { _dateCreated = value; }
