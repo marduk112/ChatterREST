@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -37,10 +38,10 @@ namespace ChatterREST.Controllers
         }
 
         // GET: api/Bets/5
-        [ResponseType(typeof(IQueryable<BetDTO>))]
+        [ResponseType(typeof(ICollection<BetDTO>))]
         public async Task<IHttpActionResult> GetBet(int id)
         {
-            IQueryable<BetDTO> betList;
+            ICollection<BetDTO> betList;
             Bet bet = await db.Bets.FindAsync(id);
             if (bet == null)
             {
@@ -50,27 +51,26 @@ namespace ChatterREST.Controllers
             {
                 Mapper.CreateMap<Bet, BetDTO>();
                 var dto = Mapper.Map<BetDTO>(bet);
-                return Ok(dto);
-               // betList.Add(temp);
+                betList = new List<BetDTO> {dto};
             }
             else
             {
-                return Ok(from b in db.Bets
-                    where b.ApplicationUserId == User.Identity.GetUserId()
-                    select new BetDTO
-                    {
-                        DateCreated = b.DateCreated,
-                        Description = b.Description,
-                        EndDate = b.EndDate,
-                        Id = b.Id,
-                        RequiredPoints = b.RequiredPoints,
-                        Result = b.Result,
-                        Title = b.Title,
-                        UserName = b.ApplicationUser.UserName,
-                    });
-                //betList = userBets.ToList();
+                var userBets = from b in db.Bets
+                               where b.ApplicationUserId == User.Identity.GetUserId()
+                               select new BetDTO
+                               {
+                                   DateCreated = b.DateCreated,
+                                   Description = b.Description,
+                                   EndDate = b.EndDate,
+                                   Id = b.Id,
+                                   RequiredPoints = b.RequiredPoints,
+                                   Result = b.Result,
+                                   Title = b.Title,
+                                   UserName = b.ApplicationUser.UserName,
+                               };
+                betList = userBets.ToList();
             }
-            //return Ok(betList);
+            return Ok(betList);
         }
 
         // PUT: api/Bets/5
