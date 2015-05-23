@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
 using ChatterREST.Models;
 using Microsoft.AspNet.Identity;
 
@@ -36,10 +37,10 @@ namespace ChatterREST.Controllers
         }
 
         // GET: api/Bets/5
-        [ResponseType(typeof(ICollection<BetDTO>))]
+        [ResponseType(typeof(IQueryable<BetDTO>))]
         public async Task<IHttpActionResult> GetBet(int id)
         {
-            ICollection<BetDTO> betList;
+            IQueryable<BetDTO> betList;
             Bet bet = await db.Bets.FindAsync(id);
             if (bet == null)
             {
@@ -47,23 +48,14 @@ namespace ChatterREST.Controllers
             }
             if (id != 0)
             {
-                betList = new List<BetDTO>();
-                var temp = new BetDTO
-                {
-                       DateCreated = bet.DateCreated,
-                       Description = bet.Description,
-                       EndDate = bet.EndDate,
-                       Id = bet.Id,
-                       RequiredPoints = bet.RequiredPoints,
-                       Result = bet.Result,
-                       Title = bet.Title,
-                       UserName = bet.ApplicationUser.UserName,
-                   };
-                betList.Add(temp);
+                Mapper.CreateMap<Bet, BetDTO>();
+                var dto = Mapper.Map<BetDTO>(bet);
+                return Ok(dto);
+               // betList.Add(temp);
             }
             else
             {
-                var userBets = from b in db.Bets
+                return Ok(from b in db.Bets
                     where b.ApplicationUserId == User.Identity.GetUserId()
                     select new BetDTO
                     {
@@ -75,10 +67,10 @@ namespace ChatterREST.Controllers
                         Result = b.Result,
                         Title = b.Title,
                         UserName = b.ApplicationUser.UserName,
-                    };
-                betList = userBets.ToList();
+                    });
+                //betList = userBets.ToList();
             }
-            return Ok(betList);
+            //return Ok(betList);
         }
 
         // PUT: api/Bets/5
