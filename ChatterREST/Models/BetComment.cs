@@ -26,7 +26,7 @@ namespace ChatterREST.Models
         }
         [Required]
         public int BetId { get; set; }
-        public Bet Bet { get; set; }
+        public virtual Bet Bet { get; set; }
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 

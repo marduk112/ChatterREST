@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
 using ChatterREST.Models;
 
 namespace ChatterREST.Controllers
@@ -18,13 +19,21 @@ namespace ChatterREST.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/BetComments
-        public IQueryable<BetComment> GetBetComments()
+        public IQueryable<BetCommentDTO> GetBetComments()
         {
-            return db.BetComments;
+            return from comment in db.BetComments
+                   select new BetCommentDTO
+                   {
+                       Id = comment.Id,
+                       BetId = comment.BetId,
+                       Commment = comment.Commment,
+                       DateCreated = comment.DateCreated,
+                       UserName = comment.ApplicationUser.UserName,
+                   };
         }
 
         // GET: api/BetComments/5
-        [ResponseType(typeof(BetComment))]
+        [ResponseType(typeof(BetCommentDTO))]
         public async Task<IHttpActionResult> GetBetComment(int id)
         {
             BetComment betComment = await db.BetComments.FindAsync(id);
@@ -32,7 +41,6 @@ namespace ChatterREST.Controllers
             {
                 return NotFound();
             }
-
             return Ok(betComment);
         }
 
