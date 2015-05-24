@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using ChatterREST.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ChatterREST.Controllers
 {
@@ -18,9 +19,16 @@ namespace ChatterREST.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: api/BetParticipants
-        public IQueryable<BetParticipant> GetBetParticipants()
+        public IQueryable<BetParticipantDTO> GetBetParticipants()
         {
-            return db.BetParticipants;
+            return from participant in db.BetParticipants
+                   select new BetParticipantDTO
+                   {
+                       BetId = participant.BetId,
+                       Id = participant.Id,
+                       Option = participant.Option,
+                       UserName = participant.ApplicationUser.UserName,
+                   };
         }
 
         // GET: api/BetParticipants/5
@@ -80,6 +88,7 @@ namespace ChatterREST.Controllers
                 return BadRequest(ModelState);
             }
 
+            betParticipant.ApplicationUserId = User.Identity.GetUserId();
             db.BetParticipants.Add(betParticipant);
             await db.SaveChangesAsync();
 
