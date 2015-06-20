@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
 using ChatterREST.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ChatterREST.Controllers
 {
@@ -88,6 +89,7 @@ namespace ChatterREST.Controllers
                 return BadRequest(ModelState);
             }
 
+            betComment.ApplicationUserId = User.Identity.GetUserId();
             db.BetComments.Add(betComment);
             await db.SaveChangesAsync();
 
