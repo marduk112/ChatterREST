@@ -52,13 +52,13 @@ namespace ChatterREST.Controllers
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        [ResponseType(typeof (int)), Authorize]
+        [ResponseType(typeof (UserInfo)), Authorize]
         [Route("UserPoints")]
         public async Task<IHttpActionResult> GetUserPoints()
         {
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
-            var points = user.Point;
-            return Ok(points);
+            var userInfo = new UserInfo {Points = user.Point};
+            return Ok(userInfo);
         }
 
 
