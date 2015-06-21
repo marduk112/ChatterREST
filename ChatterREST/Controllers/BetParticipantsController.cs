@@ -89,6 +89,7 @@ namespace ChatterREST.Controllers
             }
 
             betParticipant.ApplicationUserId = User.Identity.GetUserId();
+            betParticipant.ApplicationUser.Point -= betParticipant.Bet.RequiredPoints;
             db.BetParticipants.Add(betParticipant);
             await db.SaveChangesAsync();
 
