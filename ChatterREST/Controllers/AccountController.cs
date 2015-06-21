@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -50,6 +51,16 @@ namespace ChatterREST.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+
+        [ResponseType(typeof (int)), Authorize]
+        [Route("UserPoints")]
+        public async Task<IHttpActionResult> GetUserPoints()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            var points = user.Point;
+            return Ok(points);
+        }
+
 
         // GET api/Account/UserInfo
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]
