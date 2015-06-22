@@ -14,6 +14,14 @@ namespace ChatterREST.Migrations
 
         protected override void Seed(ChatterREST.Models.ApplicationDbContext context)
         {
+            context.Rewards.AddOrUpdate(
+                r => r.Name,
+                new Models.Reward
+                {
+                    Name = "Witcher 3",
+                    Quantity = 10,
+                    Value = 10000,
+                });
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

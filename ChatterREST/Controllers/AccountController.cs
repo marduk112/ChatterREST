@@ -26,6 +26,7 @@ namespace ChatterREST.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -53,11 +54,12 @@ namespace ChatterREST.Controllers
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
         
         [Route("UserPoints")]
-        public async Task<UserInfo> GetUserPoints()
+        [Authorize]
+        [ResponseType(typeof(UserInfo))]
+        public async Task<IHttpActionResult> GetUserPoints()
         {
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
-            var userInfo = new UserInfo {Points = user.Point};
-            return userInfo;
+            var userInfo = new UserInfo {Points = db.Users.Find(User.Identity.GetUserId()).Point};
+            return Ok(userInfo);
         }
 
 

@@ -40,5 +40,7 @@ namespace ChatterREST.Models
         public System.Data.Entity.DbSet<ChatterREST.Models.BetComment> BetComments { get; set; }
 
         public System.Data.Entity.DbSet<ChatterREST.Models.BetParticipant> BetParticipants { get; set; }
+
+        public System.Data.Entity.DbSet<ChatterREST.Models.Reward> Rewards { get; set; }
     }
 }
